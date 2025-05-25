@@ -1,1 +1,0 @@
-This zip contains the updated authentication-enabled version of Team Purple's app.
