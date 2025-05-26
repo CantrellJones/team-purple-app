@@ -72,7 +72,46 @@ function SignUp() {
 }
 
 function Dashboard() {
-  return <div style={{ padding: '2rem' }}>Team Member Dashboard (Protected)</div>;
+  const goal = {
+    name: 'College Fund',
+    target: 2000,
+    saved: 1200,
+  };
+  const recentActivity = [
+    { date: 'May 22', source: 'Coupon at Fort Bragg', amount: 25 },
+    { date: 'May 20', source: 'Weekly grocery discount', amount: 10 },
+  ];
+  const percentComplete = Math.min((goal.saved / goal.target) * 100, 100);
+
+  return (
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+      <h2>Team Member Dashboard</h2>
+
+      <div style={{ margin: '2rem 0', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
+        <h3>Goal Progress</h3>
+        <p><strong>{goal.name}</strong>: ${goal.saved} of ${goal.target}</p>
+        <div style={{ height: '20px', background: '#eee', borderRadius: '10px' }}>
+          <div style={{ width: `${percentComplete}%`, background: '#5e3b76', height: '100%', borderRadius: '10px' }}></div>
+        </div>
+      </div>
+
+      <div style={{ margin: '2rem 0', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
+        <h3>Savings Summary</h3>
+        <p>Total Saved: ${goal.saved}</p>
+        <p>Average per Month: $145 (mock)</p>
+        <p>Auto-Save: <strong>ON</strong></p>
+      </div>
+
+      <div style={{ margin: '2rem 0', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
+        <h3>Recent Activity</h3>
+        <ul>
+          {recentActivity.map((item, idx) => (
+            <li key={idx}>💵 {item.date} - ${item.amount} from {item.source}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
 }
 
 function Admin() {
