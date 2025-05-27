@@ -72,16 +72,37 @@ function SignUp() {
 }
 
 function Dashboard() {
-  const goal = {
-    name: 'College Fund',
-    target: 2000,
-    saved: 1200,
+  const [goal, setGoal] = useState(() => {
+    return JSON.parse(localStorage.getItem('goal')) || {
+      name: 'College Fund',
+      target: 2000,
+      saved: 1200,
+    };
+  });
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [formGoal, setFormGoal] = useState({ ...goal });
+
+  const handleEditChange = (e) => {
+    setFormGoal({ ...formGoal, [e.target.name]: e.target.value });
   };
+
+  const handleEditSave = () => {
+    const updatedGoal = {
+      ...goal,
+      name: formGoal.name,
+      target: parseFloat(formGoal.target) || goal.target,
+    };
+    setGoal(updatedGoal);
+    localStorage.setItem('goal', JSON.stringify(updatedGoal));
+    setIsEditing(false);
+  };
+
+  const percentComplete = Math.min((goal.saved / goal.target) * 100, 100);
   const recentActivity = [
     { date: 'May 22', source: 'Coupon at Fort Bragg', amount: 25 },
     { date: 'May 20', source: 'Weekly grocery discount', amount: 10 },
   ];
-  const percentComplete = Math.min((goal.saved / goal.target) * 100, 100);
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
@@ -89,10 +110,32 @@ function Dashboard() {
 
       <div style={{ margin: '2rem 0', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
         <h3>Goal Progress</h3>
-        <p><strong>{goal.name}</strong>: ${goal.saved} of ${goal.target}</p>
-        <div style={{ height: '20px', background: '#eee', borderRadius: '10px' }}>
-          <div style={{ width: `${percentComplete}%`, background: '#5e3b76', height: '100%', borderRadius: '10px' }}></div>
-        </div>
+        {isEditing ? (
+          <div>
+            <input
+              name="name"
+              value={formGoal.name}
+              onChange={handleEditChange}
+              placeholder="Goal Name"
+            /><br />
+            <input
+              name="target"
+              type="number"
+              value={formGoal.target}
+              onChange={handleEditChange}
+              placeholder="Target Amount"
+            /><br />
+            <button onClick={handleEditSave}>Save Goal</button>
+          </div>
+        ) : (
+          <>
+            <p><strong>{goal.name}</strong>: ${goal.saved} of ${goal.target}</p>
+            <div style={{ height: '20px', background: '#eee', borderRadius: '10px' }}>
+              <div style={{ width: `${percentComplete}%`, background: '#5e3b76', height: '100%', borderRadius: '10px' }}></div>
+            </div>
+            <button style={{ marginTop: '10px' }} onClick={() => setIsEditing(true)}>Edit Goal</button>
+          </>
+        )}
       </div>
 
       <div style={{ margin: '2rem 0', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
