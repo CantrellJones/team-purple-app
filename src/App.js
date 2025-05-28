@@ -40,7 +40,7 @@ function Login({ setUser }) {
 
 function SignUp() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'member' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'member', status: 'active' });
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -158,7 +158,107 @@ function Dashboard() {
 }
 
 function Admin() {
-  return <div style={{ padding: '2rem' }}>Admin Dashboard (Protected)</div>;
+  const [users, setUsers] = useState([]);
+  const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    const storedUsers = JSON.parse(localStorage.getItem('users') || '[]');
+    setUsers(storedUsers);
+  }, []);
+
+  const filteredUsers = users.filter(user => {
+    return (
+      (filter === 'all' || user.role === filter) &&
+      (filter === 'partner' || filter === 'admin' ? user.name.toLowerCase().includes(search.toLowerCase()) : true)
+    );
+  });
+
+  const handleDeactivate = (email) => {
+    const updatedUsers = users.map(user =>
+      user.email === email ? { ...user, status: 'deactivated' } : user
+    );
+    setUsers(updatedUsers);
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
+  };
+
+  const exportCSV = () => {
+    const headers = ['Name', 'Email', 'Role', 'Status'];
+    const rows = users.map(u => [u.name, u.email, u.role, u.status || 'active']);
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "users.csv";
+    link.click();
+  };
+
+  const countByRole = role => users.filter(u => u.role === role).length;
+  const activeCount = users.filter(u => u.status !== 'deactivated').length;
+  const deactivatedCount = users.length - activeCount;
+
+  return (
+    <div style={{ padding: '2rem' }}>
+      <h2>Admin Dashboard</h2>
+
+      <div style={{ marginBottom: '1rem' }}>
+        <label>Filter by Role: </label>
+        <select value={filter} onChange={e => setFilter(e.target.value)}>
+          <option value="all">All</option>
+          <option value="member">Team Member</option>
+          <option value="partner">Partner</option>
+          <option value="admin">Admin</option>
+        </select>
+        {(filter === 'partner' || filter === 'admin') && (
+          <input
+            type="text"
+            placeholder="Search by name"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            style={{ marginLeft: '1rem' }}
+          />
+        )}
+        <button onClick={exportCSV} style={{ marginLeft: '1rem' }}>Export CSV</button>
+      </div>
+
+      <div style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
+        <h3>Quick Stats</h3>
+        <p>Total Users: {users.length}</p>
+        <p>Team Members: {countByRole('member')}</p>
+        <p>Partners: {countByRole('partner')}</p>
+        <p>Admins: {countByRole('admin')}</p>
+        <p>Active Accounts: {activeCount}</p>
+        <p>Deactivated Accounts: {deactivatedCount}</p>
+      </div>
+
+      <table border="1" cellPadding="8" cellSpacing="0" style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredUsers.map((user, index) => (
+            <tr key={index}>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>{user.role}</td>
+              <td>{user.status || 'active'}</td>
+              <td>
+                {user.status !== 'deactivated' && (
+                  <button onClick={() => handleDeactivate(user.email)}>Deactivate</button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 function Settings() {
