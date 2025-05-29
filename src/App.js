@@ -186,6 +186,15 @@ function Dashboard() {
   );
 }
 
+function PartnerDashboard() {
+  return (
+    <div style={{ padding: '2rem' }}>
+      <h2>Partner Dashboard</h2>
+      <p>This is where partners will see coupon performance, engagement metrics, etc. (Placeholder)</p>
+    </div>
+  );
+}
+
 function Admin() {
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('all');
@@ -335,6 +344,7 @@ function App() {
         <Route path="/admin" element={user?.role === 'admin' ? <Admin /> : <Home />} />
         <Route path="/settings" element={user ? <Settings /> : <Home />} />
         <Route path="/admin-login" element={<AdminLogin setUser={setUser} />} />
+        <Route path="/partner-dashboard" element={user?.role === 'partner' ? <PartnerDashboard /> : <Home />} />
       </Routes>
     </Router>
   );
