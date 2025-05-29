@@ -38,6 +38,7 @@ function AdminLogin({ setUser }) {
       <button onClick={handleLogin}>Log In</button>
     </div>
   );
+}
 
 function Login({ setUser }) {
   const [email, setEmail] = useState('');
