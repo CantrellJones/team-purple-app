@@ -11,6 +11,34 @@ function Home() {
   );
 }
 
+function AdminLogin({ setUser }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(
+      u => u.email === email && u.password === password && (u.role === 'admin' || u.role === 'partner')
+    );
+    if (user) {
+      localStorage.setItem('session', JSON.stringify(user));
+      setUser(user);
+      navigate(user.role === 'admin' ? '/admin' : '/partner-dashboard');
+    } else {
+      alert('Invalid admin or partner login credentials');
+    }
+  };
+
+  return (
+    <div style={{ padding: '2rem' }}>
+      <h2>Admin/Partner Login</h2>
+      <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} /><br />
+      <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} /><br />
+      <button onClick={handleLogin}>Log In</button>
+    </div>
+  );
+
 function Login({ setUser }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -305,6 +333,7 @@ function App() {
         <Route path="/dashboard" element={user ? <Dashboard /> : <Home />} />
         <Route path="/admin" element={user?.role === 'admin' ? <Admin /> : <Home />} />
         <Route path="/settings" element={user ? <Settings /> : <Home />} />
+        <Route path="/admin-login" element={<AdminLogin setUser={setUser} />} />
       </Routes>
     </Router>
   );
