@@ -71,4 +71,43 @@
   .landing-buttons button {
     max-width: none;
   }
+
+  /* Mission statement block */
+.landing-mission {
+  margin-top: 3rem;
+  max-width: 800px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.landing-mission h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.landing-mission p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* Image or banner placeholder */
+.landing-illustration {
+  margin-top: 2rem;
+}
+
+.landing-illustration img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Footer styling */
+.landing-footer {
+  margin-top: 4rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
 }
