@@ -7,11 +7,30 @@ function Home() {
     <div className="landing-container">
       <h1 className="landing-header">Welcome to Team Purple</h1>
       <p className="landing-subtext">Helping military families save smarter.</p>
+
       <div className="landing-buttons">
         <Link to="/signup">Join the Team</Link>
         <Link to="/login">Log In</Link>
-        {/* Admin login route still exists but is not shown here */}
       </div>
+
+      {/* NEW - Mission Section */}
+      <div className="landing-mission">
+        <h2>Our Mission</h2>
+        <p>
+          Team Purple was built to honor the commitment of our service members by making it easier
+          to save for college and retirement—without costing you anything out of pocket.
+        </p>
+      </div>
+
+      {/* NEW - Image Placeholder */}
+      <div className="landing-illustration">
+        <img src="/illustration-placeholder.jpg" alt="Illustration of family saving" />
+      </div>
+
+      {/* NEW - Footer */}
+      <footer className="landing-footer">
+        <p>&copy; {new Date().getFullYear()} Team Purple. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
