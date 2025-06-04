@@ -6,7 +6,6 @@
   padding: 3rem 1rem;
   min-height: 100vh;
   text-align: center;
-  background-image: url('/hero-image.jpg'); /* Optional */
   background-size: cover;
   background-position: center;
   background-color: #4b2e83; /* fallback color */
