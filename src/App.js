@@ -10,9 +10,7 @@ function Home() {
       <div className="landing-buttons">
         <Link to="/signup">Join the Team</Link>
         <Link to="/login">Log In</Link>
-        <Link to="/admin-login">
-          <button>Partner & Admin Login</button>
-        </Link>
+        {/* Admin login route still exists but is not shown here */}
       </div>
     </div>
   );
