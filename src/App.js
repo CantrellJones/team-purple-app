@@ -4,10 +4,16 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react
 
 function Home() {
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Welcome to Team Purple</h1>
-      <p>Helping military families save smarter.</p>
-      <Link to="/login">Team Member Login</Link>
+    <div className="landing-container">
+      <h1 className="landing-header">Welcome to Team Purple</h1>
+      <p className="landing-subtext">Helping military families save smarter.</p>
+      <div className="landing-buttons">
+        <Link to="/signup">Join the Team</Link>
+        <Link to="/login">Log In</Link>
+        <Link to="/admin-login">
+          <button>Partner & Admin Login</button>
+        </Link>
+      </div>
     </div>
   );
 }
