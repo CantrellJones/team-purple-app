@@ -8,7 +8,7 @@
   text-align: center;
 
   /* New background image */
-  background-image: url('team-purple-hero.png');
+  background-image: url('/team-purple-hero.png');
   background-size: cover;
   background-position: center;
   background-color: #4b2e83; /* fallback color */
