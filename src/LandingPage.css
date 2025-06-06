@@ -6,13 +6,6 @@
   padding: 3rem 1rem;
   min-height: 100vh;
   text-align: center;
-
-  /* New background image */
-  background-image: url('/team-purple-hero.png');
-  background-size: cover;
-  background-position: center;
-  background-color: #4b2e83; /* fallback color */
-
   color: #ffffff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -70,6 +63,12 @@
     flex-direction: row;
     justify-content: center;
   }
+
+  .landing-buttons a,
+  .landing-buttons button {
+    max-width: none;
+  }
+}
 
   .landing-buttons a,
   .landing-buttons button {
