@@ -7,7 +7,7 @@ function Home() {
     <div
       className="landing-container"
       style={{
-        backgroundImage: "url('/team-purple-hero.png')",
+        backgroundImage: "url('./team-purple-hero.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundColor: "#4b2e83"
