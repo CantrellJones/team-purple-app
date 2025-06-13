@@ -1,7 +1,7 @@
 import './LandingPageFixed.css';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import heroImage from './team-purple-hero.png'; // ✅ background image
+import heroImage from './team-purple-hero.png';
 
 function Home() {
   return (
@@ -9,9 +9,9 @@ function Home() {
       className="landing-container"
       style={{
         backgroundImage: `url(${heroImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundColor: '#4b2e83',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "#4b2e83"
       }}
     >
       <h1 className="landing-header">Welcome to Team Purple</h1>
@@ -31,7 +31,7 @@ function Login({ setUser }) {
 
   const handleLogin = () => {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find((u) => u.email === email && u.password === password);
+    const user = users.find(u => u.email === email && u.password === password);
     if (user) {
       localStorage.setItem('session', JSON.stringify(user));
       setUser(user);
@@ -44,8 +44,8 @@ function Login({ setUser }) {
   return (
     <div style={{ padding: '2rem' }}>
       <h2>Login</h2>
-      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} /><br />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} /><br />
+      <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} /><br />
+      <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} /><br />
       <button onClick={handleLogin}>Log In</button>
     </div>
   );
@@ -53,7 +53,7 @@ function Login({ setUser }) {
 
 function SignUp() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'member', status: 'active' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', phone: '', role: 'member', status: 'active' });
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -72,6 +72,7 @@ function SignUp() {
       <form onSubmit={handleSubmit}>
         <input name="name" placeholder="Name" onChange={handleChange} required /><br />
         <input name="email" type="email" placeholder="Email" onChange={handleChange} required /><br />
+        <input name="phone" type="tel" placeholder="Phone (e.g. 555-123-4567)" onChange={handleChange} required /><br />
         <input name="password" type="password" placeholder="Password" onChange={handleChange} required /><br />
         <button type="submit">Sign Up</button>
       </form>
@@ -80,15 +81,9 @@ function SignUp() {
 }
 
 function Dashboard({ user }) {
-  const [goal, setGoal] = useState(() => {
-    return JSON.parse(localStorage.getItem('goal')) || {
-      name: 'College Fund',
-      target: 2000,
-      saved: 1200,
-      continueSaving: true,
-    };
+  const [goal, setGoal] = useState(() => JSON.parse(localStorage.getItem('goal')) || {
+    name: 'College Fund', target: 2000, saved: 1200, continueSaving: true
   });
-
   const [isEditing, setIsEditing] = useState(false);
   const [formGoal, setFormGoal] = useState({ ...goal });
   const [showCongrats, setShowCongrats] = useState(false);
@@ -106,49 +101,41 @@ function Dashboard({ user }) {
       setShowCongrats(true);
     }
     if (goalReachedDate) {
-      const now = new Date();
-      const diffDays = (now - new Date(goalReachedDate)) / (1000 * 60 * 60 * 24);
+      const diffDays = (new Date() - new Date(goalReachedDate)) / (1000 * 60 * 60 * 24);
       setShowCongrats(diffDays <= 7);
     }
   }, [goal, goalReachedDate]);
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setFormGoal((prev) => ({ ...prev, [name]: value }));
+    setFormGoal(prev => ({ ...prev, [name]: name === 'continueSaving' ? value === 'yes' : value }));
   };
 
   const handleEditSave = () => {
-    if (formGoal.continueSaving === 'no' && formGoal.authCode !== '1234') {
-      alert('Invalid 4-digit code. Please check your phone and try again.');
-      return;
+    if (!formGoal.continueSaving) {
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+      alert(`Enter this 4-digit code sent to your phone (${user.phone}): ${code}`);
+      const userInput = prompt('Enter the 4-digit code to confirm disabling auto-save:');
+      if (userInput !== code) {
+        alert('Incorrect code. Auto-save remains ON.');
+        setFormGoal(prev => ({ ...prev, continueSaving: true }));
+        return;
+      }
     }
-
-    const updatedGoal = {
-      ...goal,
-      name: formGoal.name,
-      target: parseFloat(formGoal.target) || goal.target,
-      continueSaving: formGoal.continueSaving !== 'no',
-    };
-
+    const updatedGoal = { ...goal, name: formGoal.name, target: parseFloat(formGoal.target), continueSaving: formGoal.continueSaving };
     setGoal(updatedGoal);
     localStorage.setItem('goal', JSON.stringify(updatedGoal));
     setIsEditing(false);
   };
 
   const percentComplete = Math.min((goal.saved / goal.target) * 100, 100);
-  const recentActivity = [
-    { date: 'May 22', source: 'Coupon at Fort Bragg', amount: 25 },
-    { date: 'May 20', source: 'Weekly grocery discount', amount: 10 },
-  ];
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h2 style={{ textAlign: 'center' }}>
-        {user?.name ? `${user.name}'s Dashboard` : 'Team Member Dashboard'}
-      </h2>
+      <h2>{user?.name ? `${user.name}'s Dashboard` : 'Team Member Dashboard'}</h2>
 
       {showCongrats && (
-        <div style={{ padding: '1rem', margin: '1rem 0', backgroundColor: '#d4edda', color: '#155724', borderRadius: '8px' }}>
+        <div style={{ backgroundColor: '#d4edda', color: '#155724', padding: '1rem', borderRadius: '8px' }}>
           🎉 Congratulations! You've reached your savings goal!
         </div>
       )}
@@ -156,45 +143,26 @@ function Dashboard({ user }) {
       <div style={{ margin: '2rem 0', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
         <h3>Goal Progress</h3>
         {isEditing ? (
-          <div>
-            <input name="name" value={formGoal.name} onChange={handleEditChange} placeholder="Goal Name" /><br />
-            <input name="target" type="number" value={formGoal.target} onChange={handleEditChange} placeholder="Target Amount" /><br />
-
-            <label style={{ display: 'block', marginTop: '1rem' }}>
-              Continue Saving?&nbsp;
-              <select
-                name="continueSaving"
-                value={formGoal.continueSaving ? 'yes' : 'no'}
-                onChange={(e) => setFormGoal({ ...formGoal, continueSaving: e.target.value === 'yes' })}
-              >
+          <>
+            <input name="name" value={formGoal.name} onChange={handleEditChange} /><br />
+            <input name="target" type="number" value={formGoal.target} onChange={handleEditChange} /><br />
+            <h4>Auto-Save Preferences</h4>
+            <label>
+              Continue Saving?
+              <select name="continueSaving" value={formGoal.continueSaving ? 'yes' : 'no'} onChange={handleEditChange}>
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
               </select>
-            </label>
-
-            {!formGoal.continueSaving && (
-              <div style={{ marginTop: '1rem' }}>
-                <p>Enter the 4-digit code we sent to your phone to confirm this change.</p>
-                <input
-                  type="text"
-                  maxLength={4}
-                  placeholder="0000"
-                  value={formGoal.authCode || ''}
-                  onChange={(e) => setFormGoal({ ...formGoal, authCode: e.target.value })}
-                />
-              </div>
-            )}
-
-            <button onClick={handleEditSave} style={{ marginTop: '1rem' }}>Save Goal</button>
-          </div>
+            </label><br />
+            <button onClick={handleEditSave}>Save Goal</button>
+          </>
         ) : (
           <>
             <p><strong>{goal.name}</strong>: ${goal.saved} of ${goal.target}</p>
             <div style={{ height: '20px', background: '#eee', borderRadius: '10px' }}>
               <div style={{ width: `${percentComplete}%`, background: '#5e3b76', height: '100%', borderRadius: '10px' }}></div>
             </div>
-            <p style={{ marginTop: '0.5rem' }}>Auto-Save: <strong>{goal.continueSaving ? 'ON' : 'OFF'}</strong></p>
-            <button style={{ marginTop: '10px' }} onClick={() => setIsEditing(true)}>Edit Goal</button>
+            <button onClick={() => setIsEditing(true)}>Edit Goal</button>
           </>
         )}
       </div>
@@ -203,20 +171,25 @@ function Dashboard({ user }) {
         <h3>Savings Summary</h3>
         <p>Total Saved: ${goal.saved}</p>
         <p>Average per Month: $145 (mock)</p>
+        <p>Auto-Save: <strong>{goal.continueSaving ? 'ON' : 'OFF'}</strong></p>
       </div>
 
       <div style={{ margin: '2rem 0', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
         <h3>Recent Activity</h3>
         <ul>
-          {recentActivity.map((item, idx) => (
-            <li key={idx}>💵 {item.date} - ${item.amount} from {item.source}</li>
-          ))}
+          <li>💵 May 22 - $25 from Coupon at Fort Bragg</li>
+          <li>💵 May 20 - $10 from Weekly grocery discount</li>
         </ul>
       </div>
 
       <div style={{ margin: '2rem 0', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
-        <h3>Settings</h3>
-        <p>🚧 Coming soon: account preferences, goal alerts, and email notifications.</p>
+        <h3>Account Settings</h3>
+        <ul>
+          <li>Email: {user?.email}</li>
+          <li>Phone: {user?.phone}</li>
+          <li>Auto-Save: {goal.continueSaving ? 'ON' : 'OFF'}</li>
+          <li>Status: {user?.status}</li>
+        </ul>
       </div>
     </div>
   );
@@ -224,7 +197,6 @@ function Dashboard({ user }) {
 
 function App() {
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     const session = localStorage.getItem('session');
     if (session) {
